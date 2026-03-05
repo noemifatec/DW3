@@ -1,36 +1,55 @@
-//importando o Model
 import Game from "../models/Games.js";
 
 class gameService {
-   // Método para buscar todos os registros no banco
-
+    // Buscar todos
     async getAll() {
-    try{
-        const games = await Game.find()
-        return games
-    } catch (error) {
-        console.log(error)
+        try {
+            const games = await Game.find();
+            return games;
+        } catch (error) {
+            console.log(error);
+        }
     }
-    }
-    //Método para cadastrar um game
-    async Create(title, platform, year,price) {
-        try{
+
+    // Criar novo
+    async Create(title, platform, year, price) {
+        try {
             const newGame = new Game({
-                //Desestruturação (title : title)
                 title,
                 platform,
                 year,
                 price
-            })
-            //gravando no banco
-            await newGame.save()
-            newGame.save() //.save() método do mongoose para cadastrar no BD
-
-
-        }catch(error){
-            console.log(error)
+            });
+            await newGame.save(); // Apenas uma vez com await
+            return newGame; // É uma boa prática retornar o que foi criado
+        } catch (error) {
+            console.log(error);
         }
     }
+
+    // Deletar
+    async Delete(id) {
+        try {
+            // Correção: Usar o Model 'Game' e não a classe 'gameService'
+            await Game.findByIdAndDelete(id); 
+            console.log(`Game ${id} foi deletado`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+} // Fechamento da classe que estava faltando
+
+// Método para alterar um jogo
+async Update(id, title, platform, year, price) {
+    try {
+        await Game.findByIdAndUpdate(id,{
+            title,
+            platform,
+            year,
+            price
+       } )
+       console.log(error)
+    }
+
 }
-//Exportando a classe
-export default new gameService()
+export default new gameService();
